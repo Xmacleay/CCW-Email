@@ -1,0 +1,48 @@
+workflows:
+  ios-release:
+    name: BabyTally iOS Release
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: babytally_api_key
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.babytally.app
+      vars:
+        XCODE_PROJECT: "BabyTally/BabyTally.xcodeproj"
+        XCODE_SCHEME: "BabyTally"
+      xcode: latest
+    triggering:
+      events:
+        - tag
+      tag_patterns:
+        - pattern: "v*.*.*"
+          include: true
+    scripts:
+      - name: Install XcodeGen
+        script: brew install xcodegen
+      - name: Generate Xcode project from project.yml
+        script: |
+          cd BabyTally
+          xcodegen generate
+      - name: Set up automatic code signing
+        script: |
+          cd BabyTally
+          xcode-project use-profiles
+      - name: Bump build number
+        script: |
+          cd BabyTally
+          agvtool new-version -all "$BUILD_NUMBER"
+      - name: Build .ipa for App Store distribution
+        script: |
+          cd BabyTally
+          xcode-project build-ipa --project "BabyTally.xcodeproj" --scheme "BabyTally"
+    artifacts:
+      - BabyTally/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
