@@ -1,0 +1,90 @@
+name: BabyTally
+options:
+  bundleIdPrefix: com.babytally
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+configs:
+  Debug: debug
+  Release: release
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+targets:
+  BabyTally:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - Shared
+      - BabyTally
+    entitlements:
+      path: BabyTally/BabyTally.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.babytally.shared
+    info:
+      path: BabyTally/Info.plist
+      properties:
+        CFBundleDisplayName: BabyTally
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.babytally.app
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: YES
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1"
+    dependencies:
+      - target: BabyTallyWidgetExtension
+        embed: true
+
+  BabyTallyWidgetExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - Shared
+      - BabyTallyWidget
+    entitlements:
+      path: BabyTallyWidget/BabyTallyWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.babytally.shared
+    info:
+      path: BabyTallyWidget/Info.plist
+      properties:
+        CFBundleDisplayName: BabyTally Widget
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.babytally.app.widget
+        GENERATE_INFOPLIST_FILE: YES
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+
+  BabyTallyTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - BabyTallyTests
+    dependencies:
+      - target: BabyTally
+
+schemes:
+  BabyTally:
+    build:
+      targets:
+        BabyTally: all
+        BabyTallyTests: [test]
+    test:
+      targets: [BabyTallyTests]
+    run:
+      config: Debug
