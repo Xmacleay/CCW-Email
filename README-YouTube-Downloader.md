@@ -38,6 +38,20 @@ missing.
 .\Download-YouTubePlaylists.ps1 -OutputDir "D:\Media\YouTube"
 ```
 
+## Private playlists (Liked Music, etc.)
+
+Playlists like **Liked Music** (`list=LM`) are private to your account, so yt-dlp
+must be logged in as you. Point it at the browser you're signed into YouTube with:
+
+```powershell
+.\Download-YouTubePlaylists.ps1 -AudioOnly `
+    -Url "https://music.youtube.com/playlist?list=LM" `
+    -CookiesFromBrowser edge
+```
+
+Supported: `chrome`, `edge`, `firefox`, `brave`, `chromium`, `opera`, `vivaldi`, `safari`.
+Fully close that browser first — a locked cookie database can block yt-dlp from reading it.
+
 ## What you get
 
 - One subfolder per playlist, named after the playlist. Single videos go in `Singles`.

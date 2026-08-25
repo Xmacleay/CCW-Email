@@ -43,7 +43,12 @@ param(
 
     [switch]$AudioOnly,
 
-    [string]$Quality = 'best'
+    [string]$Quality = 'best',
+
+    # For private playlists (e.g. "Liked Music", list=LM) yt-dlp must be logged in.
+    # Pass the browser you're signed into YouTube with: chrome, edge, firefox, brave.
+    [ValidateSet('chrome', 'edge', 'firefox', 'brave', 'chromium', 'opera', 'vivaldi', 'safari')]
+    [string]$CookiesFromBrowser
 )
 
 $ErrorActionPreference = 'Stop'
@@ -146,6 +151,12 @@ $common = @(
     '--concurrent-fragments', '4'
     '-o', $outputTemplate
 )
+
+# Log in via your browser's cookies so private playlists (Liked Music, etc.) work.
+if ($CookiesFromBrowser) {
+    Write-Host "Using $CookiesFromBrowser cookies for authentication." -ForegroundColor Cyan
+    $common += @('--cookies-from-browser', $CookiesFromBrowser)
+}
 
 if ($AudioOnly) {
     $format = @(
