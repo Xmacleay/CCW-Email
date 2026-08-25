@@ -1,0 +1,7 @@
+# Put one playlist (or video) URL per line.
+# Lines starting with # are ignored.
+# The script reads this file automatically when you run it with no -Url argument.
+#
+# Examples:
+# https://www.youtube.com/playlist?list=PLxxxxxxxxxxxxxxxxxx
+# https://www.youtube.com/watch?v=dQw4w9WgXcQ
